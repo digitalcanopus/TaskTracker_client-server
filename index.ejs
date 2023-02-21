@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Task List</title>
+    <meta charset="utf-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&family=Poppins&display=swap" rel="stylesheet">
+      <style type="text/css">
+         h1 {
+             color: #17003B;
+             font-family: "Noto Sans"; 
+             padding: 0px 0px 10px 20px;
+         }
+          .textic {
+             color: #17003B;
+             font-family: "Noto Sans"; 
+              margin-right: 10px;
+          }
+          .model-table {
+              margin: 10px;      
+              width: 100%;
+          }
+          th {
+              padding: 10px 20px 0px 20px;
+              color: #17003B;
+             font-family: "Noto Sans"; 
+          }
+          td {
+              padding: 10px 20px 0px 20px;
+              color: #17003B;
+              font-family: "Noto Sans"; 
+          }
+          p {
+             color: #17003B;
+             font-family: "Noto Sans"; 
+              margin: 20px;
+          }
+          .btn {
+              font-family: "Noto Sans";
+          }
+      </style>
+  </head>
+  <body>
+    <h1>Не просри дедлайны!</h1>
+    <form method="post" action="/add" enctype="multipart/form-data">
+      <div style="padding: 0px 0px 20px 20px;">
+        <label for="name" class="textic">Задача:</label>
+        <input type="text" name="name" required />
+      </div>
+      <div style="padding: 0px 0px 20px 20px;">
+        <label for="status" class="textic">Статус:</label>
+        <select class="form-control" name="status" required>
+                <option value="Принято">Принято</option>
+                <option value="В процессе">В процессе</option>
+                <option value="Сделано">Сделано</option>
+                <option value="Сдано">Сдано</option>
+        </select>        
+      </div>
+      <div style="padding: 0px 0px 20px 20px;">
+        <label for="deadline" class="textic">Дедлайн:</label>
+        <input type="date" name="deadline" required />
+      </div>
+      <div style="padding: 0px 0px 20px 20px;">
+        <label for="attach" class="textic">Прикрепить файл:</label>
+        <input type="file" name="attach"/>
+      </div>
+      <div style="padding: 0px 0px 20px 20px;">
+        <button type="submit" class="btn btn-primary btn">Добавить задачу</button>
+      </div>
+    </form>
+    <% if (tasks.length > 0) { %>
+    <table class="model_table">
+      <thead>
+        <tr>
+          <th>Задача</th>
+          <th>Статус</th>
+          <th>Дедлайн</th>
+          <th>Файл</th>
+        </tr>
+      </thead>
+  <tbody>
+   <form action="/update" method="POST">
+    <% tasks.forEach((task) => { %>
+    <tr>
+      <td><%= task.name %></td>
+      <td><select name="status">
+      <option value="Принято" <% if (task.status === 'Принято') { %>selected<% } %>>Принято</option>
+      <option value="В процессе" <% if (task.status === 'В процессе') { %>selected<% } %>>В процессе</option>
+      <option value="Сделано" <% if (task.status === 'Сделано') { %>selected<% } %>>Сделано</option>
+      <option value="Сдано" <% if (task.status === 'Сдано') { %>selected<% } %>>Сдано</option>
+      </select></td>
+      <td><input type="date" name="deadline" value="<%= task.deadline %>"/></td>
+      <% if (task.attach) { %>
+      <td><a href="/uploads/<%= task.attach%>" target="_blank"><%= task.attach %></a></td>
+      <% } else { %>
+      <td>Без файла</td>
+      <% } %>
+      <td>
+      <input type="hidden" name="id" value="<%= task.id %>"/>
+      <input type="hidden" name="name" value="<%= task.name %>"/>     
+      <% if (task.attach) { %>
+      <input type="hidden" name="attach" value="<%= task.attach %>"/>
+      <% } else { %>
+      <input type="hidden" name="attach" value=""/>
+      <% } %>
+      <button type="submit" class="btn btn-primary" name="id" value="<%= task.id %>">Сохранить</button>
+      </td>
+    </tr>
+    <% }) %>
+      </form>
+  </tbody>
+</table>
+<% } else { %>
+<p>Отдыхаем!</p>
+<% } %>
+</body>
+</html>
